@@ -1,11 +1,9 @@
 name: GitHub Actions Demo
 run-name: ${{ github.actor }} push sur la master 🚀
-
 on:
   push:
     branches:
       - master
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -13,23 +11,22 @@ jobs:
       - name: Checkout du code
         uses: actions/checkout@v4
 
+      - name: Mise en place du Cache
+        uses: actions/cache@v4
+        with: 
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+
       - name: Mise en place de Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: 'npm'
-
+          node-version: '20'
+      
       - name: Installation des dépendances
-        run: npm ci
+        run: npm install
 
       - name: Build de l'app
         run: npm run build
-
-      - name: Sauvegarde de node_modules
-        uses: actions/upload-artifact@v4
-        with:
-          name: node-modules
-          path: node_modules
 
   test:
     runs-on: ubuntu-latest
@@ -38,25 +35,22 @@ jobs:
       - name: Checkout du code
         uses: actions/checkout@v4
 
+      - name: Restauration du Cache
+        id: cache-primes-restore
+        uses: actions/cache/restore@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+
       - name: Mise en place de Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: 'npm'
-
-      - name: Téléchargement de node_modules
-        uses: actions/download-artifact@v4
-        with:
-          name: node-modules
-          path: node_modules
-
-      - name: ls 
-        run: ls
-
+          node-version: '20'
+      
       - name: Lancement des tests
         run: npm run e2e:headless
 
-      - name: Upload des vidéos e2e
+      - name: Upload des vidéos de test
         uses: actions/upload-artifact@v4
         with:
           name: videos-e2e
