@@ -19,5 +19,10 @@ jobs:
       - name: Lancement des tests
         run: npm run e2e:headless
 
+      - name: Upload des vidéos de test
+        uses: actions/upload-artifact@v2
+        with:
+          name: /videos
+
       - name: Build de l'app
         run: npm run build
