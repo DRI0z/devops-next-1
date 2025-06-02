@@ -6,7 +6,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout du code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Mise en place de Node.js
         uses: actions/setup-node@v4
@@ -20,7 +20,7 @@ jobs:
         run: npm run e2e:headless
 
       - name: Upload des vidéos de test
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: /videos
 
