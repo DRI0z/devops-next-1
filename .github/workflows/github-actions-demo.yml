@@ -20,7 +20,10 @@ jobs:
         run: npm run e2e:headless
 
       - name: Upload des vidéos de test
-        run: ls
+        uses: actions/upload-artifact@v4
+        with:
+          name: videos-e2e
+          path: cypress/videos/*.mp4
 
       - name: Build de l'app
         run: npm run build
