@@ -14,10 +14,8 @@ jobs:
       - name: Mise en place de Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-      
-      - name: Installation des dépendances
-        run: npm install
+          node-version: 20
+          cache: 'npm'
 
       - name: Build de l'app
         run: npm run build
@@ -32,7 +30,8 @@ jobs:
       - name: Mise en place de Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: 20
+          cache: 'npm'
       
       - name: Lancement des tests
         run: npm run e2e:headless
