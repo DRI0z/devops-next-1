@@ -17,6 +17,9 @@ jobs:
           node-version: 20
           cache: 'npm'
 
+      - name: Installation des dépendances
+        run: npm ci
+
       - name: Build de l'app
         run: npm run build
 
