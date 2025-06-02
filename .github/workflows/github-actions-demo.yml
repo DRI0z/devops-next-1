@@ -1,8 +1,11 @@
 name: GitHub Actions Demo
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
-on: [push]
+run-name: ${{ github.actor }} push sur la master 🚀
+on:
+  push:
+    branches:
+      - master
 jobs:
-  build-test:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout du code
@@ -16,6 +19,20 @@ jobs:
       - name: Installation des dépendances
         run: npm install
 
+      - name: Build de l'app
+        run: npm run build
+  test:
+    runs-on: ubuntu-latest
+    needs: build-test
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      - name: Mise en place de Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
       - name: Lancement des tests
         run: npm run e2e:headless
 
@@ -24,6 +41,3 @@ jobs:
         with:
           name: videos-e2e
           path: cypress/videos/*.mp4
-
-      - name: Build de l'app
-        run: npm run build
