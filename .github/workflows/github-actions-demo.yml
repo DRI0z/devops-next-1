@@ -20,9 +20,7 @@ jobs:
         run: npm run e2e:headless
 
       - name: Upload des vidéos de test
-        uses: actions/upload-artifact@v4
-        with:
-          name: /videos
+        uses: ls
 
       - name: Build de l'app
         run: npm run build
