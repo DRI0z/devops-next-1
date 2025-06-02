@@ -50,8 +50,8 @@ jobs:
           name: node-modules
           path: node_modules
 
-      - name: Vérification du contenu téléchargé
-        run: ls -la node_modules
+      - name: ls 
+        run: ls
 
       - name: Lancement des tests
         run: npm run e2e:headless
