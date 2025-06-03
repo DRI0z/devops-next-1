@@ -76,7 +76,7 @@ jobs:
           cd devops-netx-1/
           git pull origin master
           npm install
-          npm run Build
+          npm run build
 
     - name: Redémarrage de l'application
       uses: appleboy/ssh-action@v1
