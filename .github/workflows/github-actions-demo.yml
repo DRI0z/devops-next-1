@@ -76,7 +76,17 @@ jobs:
           cd devops-netx-1/
           git pull origin master
           npm install
-          npm run build
-          pm2 -v
-          pm2 restart all
+          npm run Build
+
+    - name: Redémarrage de l'application
+      uses: appleboy/ssh-action@v1
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_KEY }}
+        port: 22
+        script: |
+          pm2 restart all || pm2 start --name "devops-next-1" npm -- start
+
+
 
