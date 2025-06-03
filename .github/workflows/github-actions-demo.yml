@@ -68,9 +68,9 @@ jobs:
     - name: Déploiement sur le serveur distant
       uses: appleboy/ssh-action@v1
       with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.KEY }}
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_KEY }}
         port: 22
         script: |
           cd devops-netx-1/
