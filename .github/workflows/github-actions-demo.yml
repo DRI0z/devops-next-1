@@ -86,7 +86,8 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         port: 22
         script: |
-          pm2 restart all || pm2 start --name "devops-next-1" npm -- start
+          # pm2 restart all || pm2 start --name "devops-next-1" npm -- start
+          pm2 -v
 
 
 
