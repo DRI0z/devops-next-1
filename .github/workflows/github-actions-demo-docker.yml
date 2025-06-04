@@ -59,5 +59,5 @@ jobs:
           script: |
             cd devops-next-1-test/
             git pull origin test
-            sudo /usr/bin/docker compose pull
-            sudo /usr/bin/docker compose up -d
+            sudo /usr/bin/docker compose -f docker-compose.test.yml pull
+            sudo /usr/bin/docker compose -f docker-compose.test.yml up -d
