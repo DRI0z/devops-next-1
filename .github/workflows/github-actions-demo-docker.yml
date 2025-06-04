@@ -39,7 +39,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: 22
           script: |
-            cd devops-netx-1-prod/
+            cd devops-next-1-prod/
             git pull origin master
             sudo /usr/bin/docker compose -f docker-compose.prod.yml pull
             sudo /usr/bin/docker compose -f docker-compose.prod.yml up -d
@@ -57,7 +57,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: 22
           script: |
-            cd devops-netx-1-test/
+            cd devops-next-1-test/
             git pull origin test
-            sudo /usr/bin/docker compose -f docker-compose.yml pull
-            sudo /usr/bin/docker compose -f docker-compose.yml up -d
+            sudo /usr/bin/docker compose pull
+            sudo /usr/bin/docker compose up -d
