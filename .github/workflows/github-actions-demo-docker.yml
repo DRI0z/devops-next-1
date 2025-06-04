@@ -46,7 +46,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: 22
           script: |
-            cd devops-next-1/
+            cd devops-netx-1/
             git pull origin master
             sudo /usr/bin/docker rm --force devops-next-1 || true
             sudo /usr/bin/docker compose -f docker-compose.prod.yml up -d
