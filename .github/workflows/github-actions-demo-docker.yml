@@ -38,15 +38,6 @@ jobs:
           script: |
             echo "${{ secrets.DOCKER_PASSWORD }}" | sudo -S /usr/bin/docker login ghcr.io -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
-      - name: Récupération de l'image Docker en ssh 
-        uses: appleboy/ssh-action@v1
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          port: 22
-          script: sudo /usr/bin/docker pull ghcr.io/dri0z/devops-next-1/devops-next-1
-
       - name: Lancement du conteneur Docker en ssh 
         uses: appleboy/ssh-action@v1
         with:
