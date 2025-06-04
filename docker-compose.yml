@@ -1,10 +1,14 @@
 version: '3'
 services:
   devops-next-1:
-    image: ghcr.io/dri0z/devops-next-1/devops-next-1
+    build: 
+      context: .
     container_name: devops-next-1
     restart: always
     ports:
       - "80:3000"
+    volumes:
+      - .:/app
+    command: ["npm", "run", "dev"]
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
