@@ -31,7 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Lancement du conteneur Docker sur prod (master)
+      - name: Lancement du conteneur Docker sur prod
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -52,9 +52,9 @@ jobs:
       - name: Lancement du conteneur Docker sur test
         uses: appleboy/ssh-action@v1
         with:
-          host: ${{ secrets.TEST_SSH_HOST }}
-          username: ${{ secrets.TEST_SSH_USER }}
-          key: ${{ secrets.TEST_SSH_KEY }}
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
           port: 22
           script: |
             cd devops-netx-1-test/
