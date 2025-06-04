@@ -3,7 +3,7 @@ services:
   devops-next-1:
     build: 
       context: .
-    container_name: devops-next-1
+    container_name: devops-next-1-test
     restart: always
     ports:
       - "8080:3000"
