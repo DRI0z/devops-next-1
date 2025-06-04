@@ -1,9 +1,11 @@
 name: GitHub Actions Demo avec Docker
-run-name: ${{ github.actor }} push sur la master 🚀
+
 on:
   push:
     branches:
       - master
+      - test
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -11,7 +13,7 @@ jobs:
       - name: Checkout du code
         uses: actions/checkout@v4
 
-      - name: Login to Docker Hub
+      - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
@@ -19,26 +21,17 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build de l'image Docker
-        run: docker build -t ghcr.io/dri0z/devops-next-1/devops-next-1 .
+        run: docker build -t ghcr.io/dri0z/devops-next-1/devops-next-1:${{ github.ref_name }} .
 
       - name: Push de l'image Docker
-        run: docker push ghcr.io/dri0z/devops-next-1/devops-next-1
-  
-  deploy:
+        run: docker push ghcr.io/dri0z/devops-next-1/devops-next-1:${{ github.ref_name }}
+
+  deploy-master:
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     needs: build
-    steps: 
-      # - name: Docker login en ssh
-      #   uses: appleboy/ssh-action@v1
-      #   with:
-      #     host: ${{ secrets.SSH_HOST }}
-      #     username: ${{ secrets.SSH_USER }}
-      #     key: ${{ secrets.SSH_KEY }}
-      #     port: 22
-      #     script: |
-      #       echo "${{ secrets.DOCKER_PASSWORD }}" | sudo -S /usr/bin/docker login ghcr.io -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
-
-      - name: Lancement du conteneur Docker en ssh 
+    steps:
+      - name: Lancement du conteneur Docker sur prod
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -46,11 +39,25 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: 22
           script: |
-            cd devops-netx-1/
+            cd devops-next-1-prod/
             git pull origin master
-            sudo /usr/bin/docker rm --force devops-next-1 || true
+            sudo /usr/bin/docker compose -f docker-compose.prod.yml pull
             sudo /usr/bin/docker compose -f docker-compose.prod.yml up -d
 
-
-
-
+  deploy-test:
+    if: github.ref == 'refs/heads/test'
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Lancement du conteneur Docker sur test
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: 22
+          script: |
+            cd devops-next-1-test/
+            git pull origin test
+            sudo /usr/bin/docker compose -f docker-compose.test.yml pull
+            sudo /usr/bin/docker compose -f docker-compose.test.yml up -d
