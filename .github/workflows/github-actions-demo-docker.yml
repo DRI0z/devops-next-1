@@ -1,0 +1,57 @@
+name: GitHub Actions Demo avec Docker
+run-name: ${{ github.actor }} push sur la master 🚀
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      - name: Build de l'image Docker
+        run: docker build -t ghcr.io/dri0z/devops-next-1/devops-next-1 .
+
+      - name: Push de l'image Docker
+        run: docker push ghcr.io/dri0z/devops-next-1/devops-next-1
+  
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps: 
+      - name: Docker login en ssh
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: 22
+          script: |
+            echo "${{ secrets.DOCKER_PASSWORD }}" | sudo -S /usr/bin/docker login ghcr.io -u ${{ secrets.GITHUB_ACTOR }} --password-stdin
+            
+      - name: Récupération de l'image Docker en ssh 
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: 22
+          script: sudo /usr/bin/docker pull ghcr.io/dri0z/devops-next-1/devops-next-1
+
+      - name: Lancement du conteneur Docker en ssh 
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: 22
+          script: |
+            sudo /usr/bin/docker stop devops-next-1 || true
+            sudo /usr/bin/docker rm devops-next-1 || true
+            sudo /usr/bin/docker rmi ghcr.io/dri0z/devops-next-1/devops-next-1 || true
+            sudo /usr/bin/docker run -d -p 80:3000 ghcr.io/dri0z/devops-next-1/devops-next-1
+
+
+
